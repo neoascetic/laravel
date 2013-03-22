@@ -288,4 +288,23 @@ class EloquentTest extends PHPUnit_Framework_TestCase {
 
 	}
 
+	/**
+	 * Test that updated_at and created_at is returned
+	 * as DateTime instances
+	 *
+	 * @group laravel
+	 */
+	public function testUpdatedAtCreatedAtIsDateTime()
+	{
+		$array = array('username' => 'foo', 'password' => 'foo', 'name' => 'Foo');
+
+		$user = User::create($array);
+
+		$this->assertInstanceOf('DateTime', $user->created_at);
+		$this->assertInstanceOf('DateTime', $user->updated_at);
+
+		$user->delete();
+
+	}
+
 }

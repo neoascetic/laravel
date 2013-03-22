@@ -1,3 +1,3 @@
 <?php
 
-class User {}
+class User extends Laravel\Database\Eloquent\Model {}

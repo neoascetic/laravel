@@ -636,6 +636,28 @@ abstract class Model {
 	}
 
 	/**
+	 * Return created_at as DateTime object.
+	 *
+	 * @return mixed
+	 */
+	public function get_created_at()
+	{
+		$created_at = $this->get_attribute('created_at');
+		return is_string($created_at) ? new \DateTime($created_at) : $created_at;
+	}
+
+	/**
+	 * Return updated_at as DateTime object.
+	 *
+	 * @return mixed
+	 */
+	public function get_updated_at()
+	{
+		$updated_at = $this->get_attribute('updated_at');
+		return is_string($updated_at) ? new \DateTime($updated_at) : $updated_at;
+	}
+
+	/**
 	 * Fire a given event for the model.
 	 *
 	 * @param  string  $event
