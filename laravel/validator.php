@@ -743,7 +743,8 @@ class Validator {
 	 */
 	protected function validate_before($attribute, $value, $parameters)
 	{
-		return (strtotime($value) < strtotime($parameters[0]));
+		list($dt1, $dt2) = static::to_datetimes(array($value, $parameters[0]));
+		return $dt1 < $dt2;
 	}
 
 	/**
@@ -756,7 +757,20 @@ class Validator {
 	 */
 	protected function validate_after($attribute, $value, $parameters)
 	{
-		return (strtotime($value) > strtotime($parameters[0]));
+		list($dt1, $dt2) = static::to_datetimes(array($value, $parameters[0]));
+		return $dt1 > $dt2;
+	}
+
+	/**
+	 * Convert values to array of DateTimes
+	 * @param  mixed $values
+	 * @return array
+	 */
+	private static function to_datetimes($values)
+	{
+		return array_map(function($v) {
+			return $v instanceof \DateTime ? $v : new \DateTime($v);
+		}, (array)$values);
 	}
 
 	/**
