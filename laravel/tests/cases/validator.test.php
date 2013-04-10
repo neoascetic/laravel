@@ -707,5 +707,70 @@ class ValidatorTest extends PHPUnit_Framework_TestCase {
         $expect = str_replace(array(':attribute', ':field'), array('last name', 'first name'), $lang['required_with']);
         $this->assertEquals($expect, $v->errors->first('last_name'));
     }
+	
+	/**
+	 * Test the before validation rule
+	 *
+	 * @group laravel
+	 */
+	public function testBeforeRule()
+	{
+		$rules = array(
+			'd'  => 'before:2012-12-21',
+			'dt' => 'before:2012-12-21T12:00:00',
+		);
+		$data = array(
+			array(
+				'd'  => new DateTime('2012-12-22'),
+				'dt' => new DateTime('2012-12-21T12:00:01')
+			),
+			array(
+				'd'  => '2012-12-22',
+				'dt' => '2012-12-21T12:00:01'
+			)
+		);
+		foreach ($data as $d) {
+			$v = Validator::make($d, $rules);
+			$this->assertTrue($v->fails());
+			$this->assertArrayHasKey('d', $v->errors->messages);
+			$this->assertArrayHasKey('dt', $v->errors->messages);
+		}
+	}
 
+	/**
+	* Test the lt and gt validation rules
+	*
+	* @group laravel
+	*/
+	public function testLtGtRules() {
+		$rules = array(
+			'int1' => 'lt:int2',
+			'int2' => 'gt:int1',
+			'str1' => 'lt:str2',
+			'str2' => 'gt:str1',
+		);
+		$data = array(
+			'int1' => 10,
+			'int2' => 20,
+			'str1' => 'abc',
+			'str2' => 'def',
+		);
+		$this->assertFalse(Validator::make($data, $rules)->fails());
+
+		// For dates
+		$rules = array(
+			'from' => 'date_lt:to',
+			'to'   => 'date_gt:from'
+		);
+		$data = array(
+			'from' => '2012-12-21',
+			'to' => '2012-12-20',
+		);
+		$this->assertTrue(Validator::make($data, $rules)->fails());
+		$data = array(
+			'from' => '2012-12-21',
+			'to' => '2012-12-22',
+		);
+		$this->assertFalse(Validator::make($data, $rules)->fails());
+	}
 }

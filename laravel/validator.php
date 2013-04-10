@@ -787,6 +787,62 @@ class Validator {
 	}
 
 	/**
+	 * Validate the one attribute lower than other
+	 * @param  string  $attribute
+	 * @param  mixed   $value
+	 * @param  array   $parameters
+	 * @return bool
+	 */
+	protected function validate_lt($attribute, $value, $parameters)
+	{
+		$other = $parameters[0];
+		return array_key_exists($other, $this->attributes) and $value < $this->attributes[$other];
+	}
+
+	/**
+	 * Validate the one attribute greater than other
+	 * @param  string  $attribute
+	 * @param  mixed   $value
+	 * @param  array   $parameters
+	 * @return bool
+	 */
+	protected function validate_gt($attribute, $value, $parameters)
+	{
+		$other = $parameters[0];
+		return array_key_exists($other, $this->attributes) and $value > $this->attributes[$other];
+	}
+
+	/**
+	 * Validate the one date lower than other
+	 * @param  string  $attribute
+	 * @param  mixed   $value
+	 * @param  array   $parameters
+	 * @return bool
+	 */
+	protected function validate_date_lt($attribute, $value, $parameters)
+	{
+		$other = $parameters[0];
+		if (!array_key_exists($other, $this->attributes)) return false;
+		list($dt1, $dt2) = static::to_datetimes(array($value, $this->attributes[$other]));
+		return $dt1 < $dt2;
+	}
+
+	/**
+	 * Validate the one date greater than other
+	 * @param  string  $attribute
+	 * @param  mixed   $value
+	 * @param  array   $parameters
+	 * @return bool
+	 */
+	protected function validate_date_gt($attribute, $value, $parameters)
+	{
+		$other = $parameters[0];
+		if (!array_key_exists($other, $this->attributes)) return false;
+		list($dt1, $dt2) = static::to_datetimes(array($value, $this->attributes[$other]));
+		return $dt1 > $dt2;
+	}
+
+	/**
 	 * Get the proper error message for an attribute and rule.
 	 *
 	 * @param  string  $attribute
