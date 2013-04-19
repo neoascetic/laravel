@@ -93,6 +93,9 @@ class Connection {
 			case 'pgsql':
 				return $this->grammar = new Query\Grammars\Postgres($this);
 
+			case 'intersystems_cache':
+				return $this->grammar = new Query\Grammars\IntersystemsCache($this);
+
 			default:
 				return $this->grammar = new Query\Grammars\Grammar($this);
 		}
