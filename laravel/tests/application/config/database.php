@@ -85,8 +85,11 @@ return array(
 		),
 
 		'intersystems_cache' => array(
-			'driver' => 'intersystems_cache',
-			'dsn'    => 'testdsn',
+			'driver'   => 'intersystems_cache',
+			'dsn'      => 'testdsn',
+			'username' => '',
+			'password' => '',
+			'prefix'   => '',
 			'pdo_connection_class' => '\IntersystemsCachePDOMock',
 			'pdo_statement_class'  => '\IntersystemsCachePDOStatementMock',
 		),

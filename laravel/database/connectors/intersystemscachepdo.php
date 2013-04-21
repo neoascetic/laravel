@@ -12,8 +12,8 @@ class IntersystemsCachePDO extends PDO {
     private $_statement_class = '\Laravel\Database\Connectors\IntersystemsCachePDOStatement';
     private $_is_nolocking = false;
 
-    public function __construct($dsn) {
-        $this->_connection_id = odbc_connect($dsn, '', '');
+    public function __construct($dsn, $username = '', $password = '') {
+        $this->_connection_id = odbc_connect($dsn, $username, $password);
     }
 
     public function set_statement_class($statement_class) {
