@@ -4,44 +4,27 @@ use PDO;
 use PDOStatement;
 
 class IntersystemsCachePDOStatement extends PDOStatement {
-    private static $_iconv;
+    private static $_preparing_fetched_row_function;
+    private static $_preparing_bindings_function;
 
     private $_stmt;
-    public $is_raw_odbc = true;
 
     public function __construct($statement) {
         $this->_stmt = $statement;
     }
 
-    private static function encoding($obj, $is_inversion = false, $class = 'stdClass') {
-        if (is_null(static::$_iconv)) return $obj;
-        list($from, $to) = !$is_inversion ?
-            array(static::$_iconv['from'], static::$_iconv['to']) :
-            array(static::$_iconv['to'], static::$_iconv['from']);
-        if (is_object($obj)) {
-            $return = new $class;
-            foreach ((array) $obj as $key => $val) {
-                $return->$key = iconv($from, $to, $val);
-            }
-            return $return;
-        }
-        $return = array();
-        foreach ($obj as $key => $val) {
-            $return[$key] = iconv($from, $to, $val);
-        }
-        return $return;
-    }
-
-    public function execute($input_params = array()) {
-        return (boolean) odbc_execute(
-            $this->_stmt, static::encoding($input_params, true));
+    public function execute($bindings = array()) {
+        $f = static::$_preparing_bindings_function;
+        if (is_callable($f)) $bindings = $f($bindings);
+        return (boolean) odbc_execute($this->_stmt, $bindings);
     }
 
     public function fetchAll($style = PDO::FETCH_CLASS, $class = 'stdClass', $ctor_args = array()) {
         $return = array();
+        $f = static::$_preparing_fetched_row_function;
         if ($style === PDO::FETCH_CLASS) {
             while ($row = odbc_fetch_object($this->_stmt)) {
-                $row = static::encoding($row, false, $class);
+                if (is_callable($f)) $row = $f($row, $class);
                 if (!$row instanceof $class) {
                     $tmp = $row;
                     $row = new $class;
@@ -53,14 +36,19 @@ class IntersystemsCachePDOStatement extends PDOStatement {
             }
         } else {
             while ($row = odbc_fetch_array($this->_stmt)) {
-                $return[] = static::encoding($row);
+                if (is_callable($f)) $row = $f($row, $class);
+                $return[] = $row;
             }
         }
         return $return;
     }
 
-    public static function init_iconv($from, $to) {
-        static::$_iconv = array('from' => $from, 'to' => $to);
+    public static function set_prepare_bindings_function(\Closure $closure) {
+        static::$_preparing_bindings_function = $closure;
+    }
+
+    public static function set_preparing_fetched_row_function(\Closure $closure) {
+        static::$_preparing_fetched_row_function = $closure;
     }
 }
 
