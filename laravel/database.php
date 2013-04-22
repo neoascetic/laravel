@@ -95,6 +95,9 @@ class Database {
 			case 'sqlsrv':
 				return new Database\Connectors\SQLServer;
 
+			case 'intersystems_cache':
+				return new Database\Connectors\IntersystemsCache;
+
 			default:
 				throw new \Exception("Database driver [$driver] is not supported.");
 		}
@@ -124,7 +127,7 @@ class Database {
 	{
 		return new Expression($value);
 	}
-	
+
 	/**
 	 * Escape a string for usage in a query.
 	 *
@@ -147,7 +150,7 @@ class Database {
 	{
 		return Database\Connection::$queries;
 	}
-	
+
 	/**
 	 * Get the last query that was executed.
 	 *
