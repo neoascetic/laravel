@@ -69,6 +69,7 @@ return array(
 		"string"  => "Поле :attribute должно быть длиной :size символов.",
 	),
 	"unique"         => "Такое значение поля :attribute уже существует.",
+	"unique_with"    => "Такое значение поля :attribute уже существует.",
 	"url"            => "Поле :attribute имеет неверный формат.",
 
 	/*

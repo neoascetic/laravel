@@ -502,6 +502,29 @@ class Validator {
 	}
 
 	/**
+	 * Validate the uniqueness of an attribute value on a given database table
+	 * together with other values from specified input.
+	 *
+	 * @param  string  $attribute
+	 * @param  mixed   $value
+	 * @param  array   $parameters
+	 * @return bool
+	 */
+	protected function validate_unique_with($attribute, $value, $parameters)
+	{
+		$table = array_shift($parameters);
+		$values = $this->attributes;
+		$query = $this->db()->table($table)
+			->where($attribute, '=', $value)
+			->where(function($query) use ($parameters, $values) {
+				foreach($parameters as $parameter) {
+					$query->where($parameter, '=', array_get($values, $parameter));
+				}
+			});
+		return $query->count() == 0;
+	}
+
+	/**
 	 * Validate the existence of an attribute value in a database table.
 	 *
 	 * @param  string  $attribute

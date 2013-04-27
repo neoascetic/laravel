@@ -462,6 +462,22 @@ class ValidatorTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
+	 * Test the unique_with validation rule.
+	 *
+	 * @group laravel
+	 */
+	public function testUniqueWithRule()
+	{
+		$input = array('id' => 0, 'code' => 'AR');
+		$rules = array('code' => 'unique_with:validation_unique,id');
+		$this->assertTrue(Validator::make($input, $rules)->valid());
+
+		$input = array('id' => 1, 'code' => 'AR');
+		$rules = array('code' => 'unique_with:validation_unique,id');
+		$this->assertFalse(Validator::make($input, $rules)->valid());
+	}
+
+	/**
 	 * Tests the exists validation rule.
 	 *
 	 * @group laravel

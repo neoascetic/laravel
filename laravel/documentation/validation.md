@@ -184,6 +184,11 @@ Many times, when updating a record, you want to use the unique rule, but exclude
 
 	'email' => 'unique:users,email_address,10'
 
+#### Validate that an attribute is unique on a given database table together with other values:
+
+	'parent_id' => 'required',
+	'name' => 'unique_with:humans,parent_id'
+
 #### Validate that an attribute exists on a given database table:
 
 	'state' => 'exists:states'

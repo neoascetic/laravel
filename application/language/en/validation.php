@@ -71,6 +71,7 @@ return array(
 		"string"  => "The :attribute must be :size characters.",
 	),
 	"unique"         => "The :attribute has already been taken.",
+	"unique_with"    => "The :attribute has already been taken.",
 	"url"            => "The :attribute format is invalid.",
 
 	/*
