@@ -5,7 +5,12 @@ from spaghetti code, Laravel helps you create wonderful applications using
 simple, expressive syntax. Development should be a creative experience that you
 enjoy, not something that is painful. Enjoy the fresh air.
 
-[Official Website & Documentation](http://laravel.com)
+Still-supported 3.x branch. We use it in production and have no reasons to
+switch to Laravel 4.
+
+[![Build Status](https://travis-ci.org/neoascetic/laravel.png?branch=master-with-fixes)](https://travis-ci.org/neoascetic/laravel)
+
+[Documentation](laravel/documentation)
 
 ## Feature Overview
 
