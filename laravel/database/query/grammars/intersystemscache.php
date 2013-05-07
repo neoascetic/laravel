@@ -3,6 +3,9 @@
 use Laravel\Database\Query;
 
 class IntersystemsCache extends Grammar {
+
+    const RELATIONS_CONNECTOR = '->';
+
     /**
      * Compile a SQL SELECT statement from a Query instance.
      *
@@ -41,6 +44,21 @@ class IntersystemsCache extends Grammar {
         }
 
         return $select.$this->columnize($query->selects);
+    }
+
+    /**
+     * Wrap a single string value in keyword identifiers.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    protected function wrap_value($value)
+    {
+        if ($value !== '*' && !str_contains($value, static::RELATIONS_CONNECTOR))
+        {
+            return sprintf($this->wrapper, $value);
+        }
+        return $value;
     }
 
     /**

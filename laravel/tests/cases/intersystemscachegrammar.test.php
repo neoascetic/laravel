@@ -29,6 +29,18 @@ class IntersystemsCacheGrammarTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(array('post1', '%foobar%'), $sql_query[1]);
     }
 
+    public function testQueryWithRelation() {
+        $fq = Post::where('title', '=', 'post1')
+            ->select(array(
+                'title',
+                'parent->title',
+                'parent->parent->title as grandpa_title'
+            ));
+        list($actual_sql, ) = static::grub_sql_get_query($fq);
+        $expected_sql = 'SELECT "title", parent->title, parent->parent->title AS "grandpa_title" FROM "posts" WHERE "title" = ?';
+        $this->assertEquals($expected_sql, $actual_sql);
+    }
+
     public function testTake() {
         $fq = Post::where('title', '=', 'post1')->take(5);
         $sql_query = static::grub_sql_get_query($fq);
