@@ -653,7 +653,7 @@ class Validator {
 	 */
 	protected function validate_alpha_dash($attribute, $value)
 	{
-		return preg_match('/^([-a-z0-9_-])+$/i', $value);
+		return preg_match('/^([a-z0-9_-])+$/i', $value);
 	}
 
 	/**
