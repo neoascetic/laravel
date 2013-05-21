@@ -113,7 +113,10 @@ class Grammar extends \Laravel\Database\Grammar {
 	 */
 	protected function from(Query $query)
 	{
-		return 'FROM '.$this->wrap_table($query->from);
+		// If the UNION was specified, then the selection should be done from it
+		$from = is_null($query->union) ?
+			$this->wrap_table($query->from) : $this->union($query);
+		return 'FROM '.$from;
 	}
 
 	/**
@@ -163,6 +166,33 @@ class Grammar extends \Laravel\Database\Grammar {
 		// implode together and return as the complete SQL for the
 		// join clause of the query under construction.
 		return implode(' ', $sql);
+	}
+
+	/**
+	 * Compile the UNION clauses for a query.
+	 *
+	 * @param  Query   $query
+	 * @return string
+	 */
+	protected function union(Query $query)
+	{
+		$alias = $query->union->alias;
+		$union_items = $query->union->items;
+		$union_sql = '';
+		for ($i = 0; $i < count($union_items); ++$i)
+		{
+			$item = $union_items[$i];
+			$union_prefix = $i ? ' UNION '.$item['type'] : '';
+			if ($union_prefix && !ends_with($union_prefix, ' '))
+			{
+				$union_prefix .= ' ';
+			}
+			$q = $item['query'];
+			if (is_null($q->selects)) $q->select(array('*'));
+			$union_sql .= $union_prefix.'('.$q->grammar->select($q).')';
+		}
+		$result = "($union_sql) ".$this->wrap($alias);
+		return $result;
 	}
 
 	/**
@@ -244,7 +274,7 @@ class Grammar extends \Laravel\Database\Grammar {
 
 	/**
 	 * Compile a WHERE BETWEEN clause
-	 * 	
+	 *
 	 * @param  array  $where
 	 * @return string
 	 */
@@ -258,14 +288,14 @@ class Grammar extends \Laravel\Database\Grammar {
 
 	/**
 	 * Compile a WHERE NOT BETWEEN clause
-	 * @param  array $where 
-	 * @return string        
+	 * @param  array $where
+	 * @return string
 	 */
 	protected function where_not_between($where)
-	{		
+	{
 		$min = $this->parameter($where['min']);
 		$max = $this->parameter($where['max']);
-		
+
 		return $this->wrap($where['column']).' NOT BETWEEN '.$min.' AND '.$max;
 	}
 
@@ -482,7 +512,7 @@ class Grammar extends \Laravel\Database\Grammar {
 
 					$sql = preg_replace('~\(\.\.\.\)~', "({$parameters})", $sql, 1);
 				}
-			}			
+			}
 		}
 
 		return trim($sql);

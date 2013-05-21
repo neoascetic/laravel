@@ -58,6 +58,12 @@ class Query {
 	public $joins;
 
 	/**
+	 * The Union object that contains queries, which must be applied union operation
+	 * @var Union
+	 */
+	public $union;
+
+	/**
 	 * The WHERE clauses.
 	 *
 	 * @var array
@@ -193,6 +199,47 @@ class Query {
 	public function left_join($table, $column1, $operator = null, $column2 = null)
 	{
 		return $this->join($table, $column1, $operator, $column2, 'LEFT');
+	}
+
+	/**
+	 * Apply UNION operation to the query
+	 * @param  mixed   $query
+	 * @param  string  $alias
+	 * @param  string  $type
+	 * @return Query
+	 */
+	public function union($query, $alias = null, $type = '')
+	{
+		$union = new Query\Union($alias ?: 'results', $this);
+
+		if ($query instanceof Closure)
+		{
+			call_user_func($query, $union);
+		}
+		else
+		{
+			if (!is_array($query)) $query = array($query);
+			foreach ($query as $q)
+			{
+				$union->add($q, $type);
+			}
+		}
+
+		$result_query = new static($this->connection, $this->grammar, $this->from);
+		$result_query->union = $union;
+		$result_query->bindings = $union->get_bindings();
+		return $result_query;
+	}
+
+	/**
+	 * Apply UNION ALL operation to the query
+	 * @param  mixed
+	 * @param  string
+	 * @return Query
+	 */
+	public function union_all($query, $alias = null)
+	{
+		return $this->union($query, $alias, 'ALL');
 	}
 
 	/**
