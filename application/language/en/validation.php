@@ -50,9 +50,9 @@ return array(
 	"lt"             => "The :attribute must be lower than :other.",
 	"match"          => "The :attribute format is invalid.",
 	"max"            => array(
-		"numeric" => "The :attribute must be less than :max.",
-		"file"    => "The :attribute must be less than :max kilobytes.",
-		"string"  => "The :attribute must be less than :max characters.",
+		"numeric" => "The :attribute may not be greater than :max.",
+		"file"    => "The :attribute may not be greater than :max kilobytes.",
+		"string"  => "The :attribute may not be greater than :max characters.",
 	),
 	"mimes"          => "The :attribute must be a file of type: :values.",
 	"min"            => array(
