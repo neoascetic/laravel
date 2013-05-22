@@ -302,8 +302,7 @@ class EloquentTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * Test that updated_at and created_at is returned
-	 * as DateTime instances
+	 * Test that updated_at and created_at returned as DateTime instances.
 	 *
 	 * @group laravel
 	 */
