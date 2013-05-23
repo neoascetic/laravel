@@ -109,6 +109,11 @@ The suite of **where_in** methods allows you to easily construct queries that se
 		->where('email', '=', 'example@gmail.com')
 		->or_where_not_in('id', array(1, 2, 3))
 		->get();
+		
+	DB::table('users')
+		->where('id', 'in', array(1, 2, 3))
+		->or_where('email', 'not in', array('foo@example.com', 'bar@example.com'))
+		->get();
 
 ### where\_null, where\_not\_null, or\_where\_null, and or\_where\_not\_null
 
