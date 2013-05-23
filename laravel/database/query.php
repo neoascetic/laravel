@@ -253,6 +253,16 @@ class Query {
 			return $this->where_nested($column, $connector);
 		}
 
+		// If operator is IN (or NOT IN), then it is particular case
+		if ($operator)
+		{
+			$op = strtolower($operator);
+			if ($op === 'in' || $op === 'not in')
+			{
+				return $this->where_in($column, $value, $connector, $op !== 'in');
+			}
+		}
+
 		$type = 'where';
 
 		$this->wheres[] = compact('type', 'column', 'operator', 'value', 'connector');
@@ -283,7 +293,7 @@ class Query {
 	 */
 	public function or_where_id($value)
 	{
-		return $this->or_where('id', '=', $value);		
+		return $this->or_where('id', '=', $value);
 	}
 
 	/**
@@ -342,15 +352,15 @@ class Query {
 	{
 		return $this->where_not_in($column, $values, 'OR');
 	}
-	
+
 	/**
 	 * Add a BETWEEN condition to the query
-	 * 
-	 * @param  string  $column    
-	 * @param  mixed  $min       
-	 * @param  mixed  $max       
-	 * @param  string  $connector 
-	 * @param  boolean $not       
+	 *
+	 * @param  string  $column
+	 * @param  mixed  $min
+	 * @param  mixed  $max
+	 * @param  string  $connector
+	 * @param  boolean $not
 	 * @return Query
 	 */
 	public function where_between($column, $min, $max, $connector = 'AND', $not = false)
@@ -367,10 +377,10 @@ class Query {
 
 	/**
 	 * Add a OR BETWEEN condition to the query
-	 * 
-	 * @param  string  $column    
-	 * @param  mixed  $min       
-	 * @param  mixed  $max       
+	 *
+	 * @param  string  $column
+	 * @param  mixed  $min
+	 * @param  mixed  $max
 	 * @return Query
 	 */
 	public function or_where_between($column, $min, $max)
@@ -380,10 +390,10 @@ class Query {
 
 	/**
 	 * Add a NOT BETWEEN condition to the query
-	 * 
-	 * @param  string  $column    
-	 * @param  mixed  $min       
-	 * @param  mixed  $max       
+	 *
+	 * @param  string  $column
+	 * @param  mixed  $min
+	 * @param  mixed  $max
 	 * @return Query
 	 */
 	public function where_not_between($column, $min, $max, $connector = 'AND')
@@ -393,10 +403,10 @@ class Query {
 
 	/**
 	 * Add a OR NOT BETWEEN condition to the query
-	 * 
-	 * @param  string  $column    
-	 * @param  mixed  $min       
-	 * @param  mixed  $max       
+	 *
+	 * @param  string  $column
+	 * @param  mixed  $min
+	 * @param  mixed  $max
 	 * @return Query
 	 */
 	public function or_where_not_between($column, $min, $max)
@@ -830,7 +840,7 @@ class Query {
 		else if ($this->grammar instanceof Postgres)
 		{
 			$row = (array) $result[0];
-			
+
 			return (int) $row[$column];
 		}
 		else
@@ -921,7 +931,7 @@ class Query {
 
 		$sql = $this->grammar->delete($this);
 
-		return $this->connection->query($sql, $this->bindings);		
+		return $this->connection->query($sql, $this->bindings);
 	}
 
 	/**
