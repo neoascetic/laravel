@@ -6,7 +6,10 @@ class IntersystemsCachePDO extends PDO {
     private $_connection_id;
 
     public function __construct($dsn, $username = '', $password = '') {
-        $this->_connection_id = odbc_connect($dsn, $username, $password);
+        $this->_connection_id = @odbc_connect($dsn, $username, $password);
+        if (!$this->_connection_id) {
+            throw new \PDOException("Cann\'t set connection with $dsn");
+        }
     }
 
     public function set_statement_class($statement_class) {
