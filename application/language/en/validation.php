@@ -39,6 +39,7 @@ return array(
 	"date_format"	 => "The :attribute must have a valid date format.",
 	"date_gt"        => "The :attribute must be greater than :other.",
 	"date_lt"        => "The :attribute must be lower than :other.",
+	"date_format"    => "The :attribute must have a valid date format.",
 	"different"      => "The :attribute and :other must be different.",
 	"email"          => "The :attribute format is invalid.",
 	"exists"         => "The selected :attribute is invalid.",
@@ -63,7 +64,7 @@ return array(
 	"not_in"         => "The selected :attribute is invalid.",
 	"numeric"        => "The :attribute must be a number.",
 	"required"       => "The :attribute field is required.",
-    "required_with"  => "The :attribute field is required with :field",
+	"required_with"  => "The :attribute field is required with :field",
 	"same"           => "The :attribute and :other must match.",
 	"size"           => array(
 		"numeric" => "The :attribute must be :size.",
