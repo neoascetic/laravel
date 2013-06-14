@@ -28,16 +28,6 @@ class Query {
 	public $includes = array();
 
 	/**
-	 * The methods that should be returned from the fluent query builder.
-	 *
-	 * @var array
-	 */
-	public $passthru = array(
-		'lists', 'only', 'insert', 'insert_get_id', 'update', 'increment',
-		'delete', 'decrement', 'count', 'min', 'max', 'avg', 'sum',
-	);
-
-	/**
 	 * Creat a new query instance for a model.
 	 *
 	 * @param  Model  $model
@@ -52,7 +42,7 @@ class Query {
 
 	/**
 	 * Find a model by its primary key.
-	 * 
+	 *
 	 * @param  mixed  $id
 	 * @param  array  $columns
 	 * @return mixed
@@ -285,12 +275,63 @@ class Query {
 		// Some methods may get their results straight from the fluent query
 		// builder such as the aggregate methods. If the called method is
 		// one of these, we will just return the result straight away.
-		if (in_array($method, $this->passthru))
+		if (in_array($method, $this->get_passthru_methods()))
 		{
 			return $result;
 		}
 
 		return $this;
+	}
+
+	/**
+	 * Get methods that should be returned from the fluent query builder.
+	 *
+	 * @return array
+	 */
+	public function get_passthru_methods()
+	{
+		return array(
+			'lists', 'only', 'insert', 'insert_get_id', 'update', 'increment',
+			'delete', 'decrement', 'count', 'min', 'max', 'avg', 'sum',
+		);
+	}
+
+	/**
+	 * Apply UNION operation
+	 *
+	 * @param  mixed  $query [description]
+	 * @param  string $alias [description]
+	 * @param  string $type  [description]
+	 * @return Query
+	 */
+	public function union($query, $alias = null, $type = '')
+	{
+		$fq = $this->table->union($query, $alias, $type);
+		$this->table = $fq;
+		return $this;
+	}
+
+	/**
+	 * Apply UNION ALL operation
+	 *
+	 * @param  mixed  $query [description]
+	 * @param  string $alias [description]
+	 * @param  string $type  [description]
+	 * @return Query
+	 */
+	public function union_all($query, $alias = null)
+	{
+		return $this->union($query, $alias, 'ALL');
+	}
+
+	/**
+	 * Return instance of Query
+	 *
+	 * @return Query
+	 */
+	public function get_query()
+	{
+		return $this->table;
 	}
 
 }
