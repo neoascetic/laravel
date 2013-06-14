@@ -221,11 +221,12 @@ class Query {
 			if (!is_array($query)) $query = array($query);
 			foreach ($query as $q)
 			{
-				$union->add($q, $type);
+				$union->add($q->get_query(), $type);
 			}
 		}
 
-		$result_query = new static($this->connection, $this->grammar, $this->from);
+		$fq_class = get_class($this->get_query());
+		$result_query = new $fq_class($this->connection, $this->grammar, $this->from);
 		$result_query->union = $union;
 		$result_query->bindings = $union->get_bindings();
 		return $result_query;
@@ -1004,6 +1005,16 @@ class Query {
 		}
 
 		throw new \Exception("Method [$method] is not defined on the Query class.");
+	}
+
+	/**
+	 * Return instance of Query (this)
+	 *
+	 * @return Query
+	 */
+	public function get_query()
+	{
+		return $this;
 	}
 
 }
