@@ -55,7 +55,9 @@ It's also possible to generate "next" and "previous" links:
 <a name="appending-to-pagination-links"></a>
 ## Appending To Pagination Links
 
-You may need to add more items to the pagination links' query strings, such as the column your are sorting by.
+Sometimes you may need to add more items to the pagination links' query strings.
+> **Note:** Current query string is appended to the links by default.
+> Each call of the `appends` method will replace already appended items.
 
 #### Appending to the query string of pagination links:
 
