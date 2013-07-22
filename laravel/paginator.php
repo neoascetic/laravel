@@ -3,6 +3,13 @@
 class Paginator {
 
 	/**
+	 * Name of the GET parameter that will be added to pagination links
+	 *
+	 * @const string
+	 */
+	const QUERY_PARAM = 'page';
+
+	/**
 	 * The results for the current page.
 	 *
 	 * @var array
@@ -84,6 +91,7 @@ class Paginator {
 		$this->total = $total;
 		$this->results = $results;
 		$this->per_page = $per_page;
+		$this->appends = array_except(Input::query(), static::QUERY_PARAM);
 	}
 
 	/**
@@ -370,7 +378,7 @@ class Paginator {
 	 */
 	protected function link($page, $text, $class)
 	{
-		$query = '?page='.$page.$this->appendage($this->appends);
+		$query = '?'.static::QUERY_PARAM.'='.$page.$this->appendage($this->appends);
 
 		return '<li'.HTML::attributes(array('class' => $class)).'>'. HTML::link(URI::current().$query, $text, array(), Request::secure()).'</li>';
 	}
