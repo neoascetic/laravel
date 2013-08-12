@@ -391,9 +391,9 @@ class Paginator {
 	 */
 	protected function appendage($appends)
 	{
-	 	// The developer may assign an array of values that will be converted to a
-	 	// query string and attached to every pagination link. This allows simple
-	 	// implementation of sorting or other things the developer may need.
+		// The developer may assign an array of values that will be converted to a
+		// query string and attached to every pagination link. This allows simple
+		// implementation of sorting or other things the developer may need.
 		if ( ! is_null($this->appendage)) return $this->appendage;
 
 		if (count($appends) <= 0)
@@ -428,4 +428,12 @@ class Paginator {
 		return $this;
 	}
 
+	/**
+	 * Return true if next page exists, otherwise return false
+	 *
+	 * @return boolean
+	 */
+	public function has_next_page() {
+		return $this->page < $this->last;
+	}
 }
