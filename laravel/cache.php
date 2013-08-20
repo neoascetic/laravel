@@ -65,7 +65,7 @@ class Cache {
 				return new Cache\Drivers\APC(Config::get('cache.key'));
 
 			case 'file':
-				return new Cache\Drivers\File(path('storage').'cache'.DS);
+				return new Cache\Drivers\File(path('storage').'cache'.DS.Request::env().DS);
 
 			case 'memcached':
 				return new Cache\Drivers\Memcached(Memcached::connection(), Config::get('cache.key'));

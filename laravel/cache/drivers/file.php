@@ -17,6 +17,7 @@ class File extends Driver {
 	 */
 	public function __construct($path)
 	{
+		\Laravel\File::mkdir($path);
 		$this->path = $path;
 	}
 
